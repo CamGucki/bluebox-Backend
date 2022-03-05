@@ -20,21 +20,21 @@ class Movie(db.Model):
     title = db.Column(db.String)
     description = db.Column(db.String)
     price = db.Column(db.Integer)
-    genre = db.Column(db.String)
+    belongsTo = db.Column(db.Integer)
     movieImg = db.Column(db.String )
 
 
 
-    def __init__(self,title, description,price,genre, movieImg):
+    def __init__(self,title, description,price,belongsTo, movieImg):
         self.title = title
         self.description = description
         self.price = price
-        self.genre = genre
+        self.belongsTo = belongsTo
         self.movieImg = movieImg
 
 class MovieSchema(ma.Schema):
     class Meta:
-        fields = ('id','title', 'description','price','genre', 'movieImg')
+        fields = ('title', 'description','price','belongsTo', 'movieImg')
 
 movie_schema = MovieSchema()
 movies_schema = MovieSchema(many = True)
@@ -50,17 +50,17 @@ def create_movie():
     title = request.json['title']
     description = request.json['description']
     price = request.json['price']
-    genre = request.json['genre']
+    belongsTo = request.json['belongsTo']
     movieImg = request.json['movieImg']
 
-    new_movie = Movie(title,description,price, genre, movieImg)
+    new_movie = Movie(title,description,price, belongsTo, movieImg)
  
     db.session.add(new_movie)
     db.session.commit()
 
     return movie_schema.jsonify(new_movie)
 
-# End point to create a new movie
+
 
 @app.route('/movies', methods = ['GET'])
 def get_movies():
@@ -88,13 +88,15 @@ def update_movie(id):
 
     title = request.json['title']
     description = request.json['description']
-    rating = request.json['rating']
-    genre = request.json['genre']
+    price = request.json['price']
+    belongsTo = request.json['belongsTo']
+    movieImg = request.json['movieImg']
 
-    movie.time = title
+    movie.title = title
     movie.description = description
-    movie.rating = rating
-    movie.genre = genre
+    movie.price = price
+    movie.belongsTo = belongsTo
+    movie.movieImg = movieImg
 
     db.session.commit()
 
