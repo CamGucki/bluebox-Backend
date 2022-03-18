@@ -19,22 +19,19 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String)
     description = db.Column(db.String)
-    price = db.Column(db.Integer)
-    belongsTo = db.Column(db.Integer)
     movieImg = db.Column(db.String )
+    category = db.Column(db.String)
 
 
 
-    def __init__(self,title, description,price,belongsTo, movieImg):
+    def __init__(self,title, description, movieImg, category):
         self.title = title
         self.description = description
-        self.price = price
-        self.belongsTo = belongsTo
         self.movieImg = movieImg
-
+        self.category = category
 class MovieSchema(ma.Schema):
     class Meta:
-        fields = ('title', 'description','price','belongsTo', 'movieImg')
+        fields = ('title', 'description','movieImg', 'category')
 
 movie_schema = MovieSchema()
 movies_schema = MovieSchema(many = True)
@@ -49,11 +46,10 @@ def create_movie():
     
     title = request.json['title']
     description = request.json['description']
-    price = request.json['price']
-    belongsTo = request.json['belongsTo']
     movieImg = request.json['movieImg']
+    category = request.json['category']
 
-    new_movie = Movie(title,description,price, belongsTo, movieImg)
+    new_movie = Movie(title,description,movieImg,category)
  
     db.session.add(new_movie)
     db.session.commit()
@@ -88,16 +84,13 @@ def update_movie(id):
 
     title = request.json['title']
     description = request.json['description']
-    price = request.json['price']
-    belongsTo = request.json['belongsTo']
     movieImg = request.json['movieImg']
+    category= request.json['category']
 
     movie.title = title
     movie.description = description
-    movie.price = price
-    movie.belongsTo = belongsTo
     movie.movieImg = movieImg
-
+    movie.category= category
     db.session.commit()
 
     return movie_schema.jsonify(movie)

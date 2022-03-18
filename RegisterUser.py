@@ -18,24 +18,20 @@ CORS(app)
 class User(db.Model):
 
    id = db.Column(db.Integer, primary_key = True)
-   email = db.Column(db.String)
+   name = db.Column(db.String)
+   email = db.Column(db.String, unique = True)
    password = db.Column(db.String)
-   streetAddress = db.Column(db.String)
-   state = db.Column(db.String)
-   city = db.Column(db.String)
-   zip = db.Column(db.Integer)
+   
 
-   def __init__(self, email, password, streetAddress,city,zip, state):
+   def __init__(self,name, email, password):
+       self.name = name
        self.email = email
        self.password = password
-       self.streetAddress = streetAddress
-       self.city = city
-       self.zip = zip
-       self.state = state
+       
 
 class UserSchema(ma.Schema):
         class Meta:
-            fields = ('email', 'password', 'streetAddress','city','zip', 'state')
+            fields = ('name','email', 'password',)
 
 user_schema = UserSchema()
 users_schema = UserSchema(many = True)
@@ -48,40 +44,23 @@ def index():
 
 @app.route ('/user', methods =['POST'])
 def create_user():
-
-    email = request.json['email']
-    password = request.json['password']
-    streetAddress = request.json['streetAddress']
-    city = request.json['city']
-    state = request.json['state']
-    zip = request.json['zip']
-
-    new_user = User('email', 'password', 'streetAddress','city','zip')
-
-    db.session.add(new_user)
-    db.session.commit()
-
-    return user_schema.jsonify(new_user)
+    data = request.json.get('user')
+    name = data.get('name')
+    email = data.get('email')
+    password = data.get('password')
+    
+    
 
 
-#endpoint to get user
-
-@app.route ('/user/<id>', methods =['GET'])
-def get_user():
-
-    email = request.json['email']
-    password = request.json['password']
-    streetAddress = request.json['streetAddress']
-    city = request.json['city']
-    state = request.json['state']
-    zip = request.json['zip']
-
-    new_user = User('email', 'password', 'streetAddress','city','zip')
+    new_user = User (name , email, password)
 
     db.session.add(new_user)
     db.session.commit()
 
     return user_schema.jsonify(new_user)
+
+
+
     
 #to get all users
 @app.route('/users', methods = ['GET'])
@@ -106,18 +85,15 @@ def get_user(id):
 def update_user(id):
     user = user.query.get(id)
 
+    name = request.json['name']
     email = request.json['email']
     password = request.json['password']
-    streetAddress = request.json['streetAddress']
-    city = request.json['city']
-    state = request.json['state']
-    zip = request.json['zip']
-
+    rating = request.json ['rating']
+    
+    user.name = name
     user.email = email
     user.password = password
-    user.streetAddress = streetAddress
-    user.city = city
-    user.zip = zip
+    user.rating = rating 
 
     db.session.commit()
 
