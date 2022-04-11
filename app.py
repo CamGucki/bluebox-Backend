@@ -5,7 +5,7 @@ import uuid
 from flask_cors import CORS, cross_origin
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
-import jwt
+# import jwt
 import datetime
 
 
