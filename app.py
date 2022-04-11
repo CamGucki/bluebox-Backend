@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'ap
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 CORS(app)
-
+# terry was here.
 # class User (db.Model):
 #     id= db.Column(db.Integer, primary_key=True)
 #     public_id = db.Column(db.String, unique=True)
