@@ -143,7 +143,7 @@ class Movie(db.Model):
 
 class MovieSchema(ma.Schema):
     class Meta:
-        fields = ('title', 'description','movieImg', 'category')
+        fields = ('title', 'description','movieImg', 'category','ratingValue')
 
 movie_schema = MovieSchema()
 movies_schema = MovieSchema(many = True)
