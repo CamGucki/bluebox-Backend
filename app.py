@@ -130,18 +130,20 @@ class Movie(db.Model):
     description = db.Column(db.String)
     movieImg = db.Column(db.String )
     category = db.Column(db.String)
+    ratingValue = db.Column(db.Integer)
 
 
-    def __init__(self,title, description, movieImg, category):
+    def __init__(self,title, description, movieImg, category, ratingValue):
         self.title = title
         self.description = description
         self.movieImg = movieImg
         self.category = category
+        self.ratingValue = ratingValue
 
 
 class MovieSchema(ma.Schema):
     class Meta:
-        fields = ('title', 'description','movieImg', 'category')
+        fields = ('title', 'description','movieImg', 'category','ratingValue')
 
 
 movie_schema = MovieSchema()
@@ -192,10 +194,14 @@ def update_movie(id):
     description = request.json['description']
     movieImg = request.json['movieImg']
     category= request.json['category']
+    ratingValue = request.json['ratingValue']
+
     movie.title = title
     movie.description = description
     movie.movieImg = movieImg
     movie.category= category
+    movie.ratingValue = ratingValue
+    
     db.session.commit()
     return movie_schema.jsonify(movie)
 
