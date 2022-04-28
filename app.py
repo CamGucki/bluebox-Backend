@@ -4,6 +4,7 @@ from flask_marshmallow import Marshmallow
 import uuid
 from flask_cors import CORS, cross_origin
 import os
+from sqlalchemy import null
 from werkzeug.security import generate_password_hash, check_password_hash
 # import jwt
 import datetime
@@ -131,21 +132,23 @@ class Movie(db.Model):
     description = db.Column(db.String)
     movieImg = db.Column(db.String )
     category = db.Column(db.String)
-   
+    ratingValue = db.Column(db.Integer, nullable=True)
+  
 #sqlalchemy how to define NOT NULL
 
-    def __init__(self,title, description, movieImg, category,  ):
+    def __init__(self, title, description, movieImg, category, ratingValue):
         self.title = title
         self.description = description
         self.movieImg = movieImg
         self.category = category
+        self.ratingValue = ratingValue
         
         
 
 
 class MovieSchema(ma.Schema):
     class Meta:
-        fields = ('title', 'description','movieImg', 'category',)
+        fields = ('title', 'description','movieImg', 'category','ratingValue','id')
 
 
 movie_schema = MovieSchema()
@@ -165,7 +168,8 @@ def create_movie():
     description = request.json['description']
     movieImg = request.json['movieImg']
     category = request.json['category']
-    new_movie = Movie(title,description,movieImg,category,)
+    ratingValue = request.json['ratingValue']
+    new_movie = Movie(title,description,movieImg,category,ratingValue)
  
     db.session.add(new_movie)
     db.session.commit()
@@ -192,17 +196,10 @@ def get_movie(id):
 @app.route('/movie/<id>', methods = ['PUT'])
 def update_movie(id):
     movie = Movie.query.get(id)
-    title = request.json['title']
-    description = request.json['description']
-    movieImg = request.json['movieImg']
-    category= request.json['category']
-    ratingValue = request.json['ratingValue']
 
-    movie.title = title
-    movie.description = description
-    movie.movieImg = movieImg
-    movie.category= category
+    ratingValue = request.json['ratingValue']
     movie.ratingValue = ratingValue
+    
     
     db.session.commit()
     return movie_schema.jsonify(movie)
